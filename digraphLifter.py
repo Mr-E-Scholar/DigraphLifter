@@ -60,17 +60,20 @@ class DigraphLifter:
         
 def numpy_graph(k, M, a, b):
     start = datetime.now()
-    graph_transformer = DigraphLifter(k, M, a, b)
-    fig = graph_transformer.draw_digraphs()
+    for i in range(10):
+        graph_transformer = DigraphLifter(k, M, a, b)
+        fig = graph_transformer.draw_digraphs()
+        fig.suptitle(f"Numpy Approach {i+1}", fontsize=16)
     end = datetime.now()
     print(f"NumPy Execution Time: {end - start}")
-
     plt.show()
 
 def pandas_graph(k, M, a, b):
     start = datetime.now()
-    graph_transformer = DigraphLifter(k, M, a, b)
-    fig = graph_transformer.draw_digraphs()
+    for i in range(10):
+        graph_transformer = DigraphLifter(k, M, a, b)
+        fig = graph_transformer.draw_digraphs()
+        fig.suptitle(f"Pandas Approach {i+1}", fontsize=16)
     end = datetime.now()
     print(f"Pandas Execution Time: {end - start}")
     plt.show()

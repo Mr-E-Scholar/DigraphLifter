@@ -6,18 +6,26 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 
 class DigraphLifter:
-    def __init__(self, k, M=2, a=1, b=1):
+    def __init__(self, k, M=2, a=1, b=1, method='numpy'):
         self.k = k
         self.M = M
         self.a = a
         self.b = b
+        self.method = method
         self.base_digraph = self.create_base_digraph()
         self.lifted_graph = self.lift_digraph()
 
     def create_base_digraph(self):
         G = nx.DiGraph()
-        for i in range(self.k):
-            G.add_edge(i % self.k, (i + 1) % self.k)
+        if self.method == 'numpy':
+            edges = np.array([[i % self.k, (i + 1) % self.k] for i in range(self.k)])
+            for edge in edges:
+                G.add_edge(edge[0], edge[1])
+        elif self.method == 'pandas':
+            edges = pd.DataFrame({'from': [i % self.k for i in range(self.k)], 
+                                  'to': [(i + 1) % self.k for i in range(self.k)]})
+            for index, row in edges.iterrows():
+                G.add_edge(row['from'], row['to'])
         return G
 
     def lift_digraph(self):
@@ -60,8 +68,9 @@ class DigraphLifter:
         
 def numpy_graph(k, M, a, b):
     start = datetime.now()
-    for i in range(10):
-        graph_transformer = DigraphLifter(k, M, a, b)
+    for i in range(50):
+        # graph_transformer = DigraphLifter(k, M, a, b)
+        graph_transformer = DigraphLifter(k, M, a, b, method='numpy')
         fig = graph_transformer.draw_digraphs()
         fig.suptitle(f"Numpy Approach {i+1}", fontsize=16)
     end = datetime.now()
@@ -70,8 +79,9 @@ def numpy_graph(k, M, a, b):
 
 def pandas_graph(k, M, a, b):
     start = datetime.now()
-    for i in range(10):
-        graph_transformer = DigraphLifter(k, M, a, b)
+    for i in range(50):
+        # graph_transformer = DigraphLifter(k, M, a, b)
+        graph_transformer = DigraphLifter(k, M, a, b, method='pandas')
         fig = graph_transformer.draw_digraphs()
         fig.suptitle(f"Pandas Approach {i+1}", fontsize=16)
     end = datetime.now()

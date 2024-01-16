@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 
 class DigraphLifter:
-    def __init__(self, V, M=2, a=1, b=1):
-        self.V = V
+    def __init__(self, k, M=2, a=1, b=1):
+        self.k = k
         self.M = M
         self.a = a
         self.b = b
@@ -16,8 +16,8 @@ class DigraphLifter:
 
     def create_base_digraph(self):
         G = nx.DiGraph()
-        for i in range(self.V):
-            G.add_edge(i % self.V, (i + 1) % self.V)
+        for i in range(self.k):
+            G.add_edge(i % self.k, (i + 1) % self.k)
         return G
 
     def lift_digraph(self):
@@ -58,30 +58,31 @@ class DigraphLifter:
         plt.title(f"Lifted Digraph\nSmallest cycle: {length_cycle_lifted}\nLargest cycle: {length_largest_lifted}")
         return fig
         
-def numpy_graph(V, M, a, b):
+def numpy_graph(k, M, a, b):
     start = datetime.now()
-    graph_transformer = DigraphLifter(V, M, a, b)
+    graph_transformer = DigraphLifter(k, M, a, b)
     fig = graph_transformer.draw_digraphs()
     end = datetime.now()
     print(f"NumPy Execution Time: {end - start}")
+
     plt.show()
 
-def pandas_graph(V, M, a, b):
+def pandas_graph(k, M, a, b):
     start = datetime.now()
-    graph_transformer = DigraphLifter(V, M, a, b)
+    graph_transformer = DigraphLifter(k, M, a, b)
     fig = graph_transformer.draw_digraphs()
     end = datetime.now()
     print(f"Pandas Execution Time: {end - start}")
     plt.show()
 
 if __name__ == '__main__':
-    V = 5  # Size of ZN
+    k = 5  # Size of Zk
     M = 2  # Size of ZM
     a = 0  # Voltage a (from ZM)
     b = 3  # Voltage b (from ZM)
 
-    process1 = multiprocessing.Process(target=numpy_graph, args=(V, M, a, b))
-    process2 = multiprocessing.Process(target=pandas_graph, args=(V, M, a, b))
+    process1 = multiprocessing.Process(target=numpy_graph, args=(k, M, a, b))
+    process2 = multiprocessing.Process(target=pandas_graph, args=(k, M, a, b))
 
     process1.start()
     process2.start()
